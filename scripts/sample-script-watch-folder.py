@@ -36,7 +36,10 @@ def monitor_folder(folder_path: str, folder_id: str) -> None:
                 log_message(logging.INFO, f"File created: {event.src_path}", color="green")
 
         def on_deleted(self, event):
-            if "content-banned" in os.path.basename(event.src_path):
+            if os.path.abspath(folder_path) == os.path.abspath(event.src_path):
+                log_message(logging.CRITICAL, f"Folder deleted: {event.src_path}", color="red")
+                observer.stop()
+            elif "content-banned" in os.path.basename(event.src_path):
                 log_message(logging.INFO, f"File deleted: {event.src_path}", color="green")
 
         def on_moved(self, event):
